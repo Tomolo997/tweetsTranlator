@@ -1,0 +1,15 @@
+{
+  "name": "twittertranslater",
+  "version": "1.0.0",
+  "description": "This is a script that tweets in english from arab talking account AFCBELL     https://twitter.com/TheAFCBeII",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "ibm-watson": "^6.1.1"
+  }
+}
