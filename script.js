@@ -1,5 +1,7 @@
 // twitter
 const axios = require("axios");
+require("dotenv").config();
+
 const LanguageTranslatorV3 = require("ibm-watson/language-translator/v3");
 const { IamAuthenticator } = require("ibm-watson/auth");
 const { fstat } = require("fs");
@@ -7,7 +9,7 @@ const fs = require("fs");
 const languageTranslator = new LanguageTranslatorV3({
   version: "2018-05-01",
   authenticator: new IamAuthenticator({
-    apikey: "S1J6D5pPmk-Q9dUAXAbrlqfH76jd__wpXuDqNbpTcNbP",
+    apikey: process.env.IBM_APIKEY,
   }),
   serviceUrl:
     "https://api.au-syd.language-translator.watson.cloud.ibm.com/instances/95d75ec8-71fe-4eee-99b5-e77c401d5be3",
@@ -25,13 +27,12 @@ const getTranslation = async (text, model) => {
   });
   return result.result.translations[0].translation;
 };
-getTranslation(" معلومات نقلت عن مصادر ثقاة بدرجة رفيعة من التثبت", "ar-en");
 
 const ObjectOFTransaltions = [];
 
 const config = {
   headers: {
-    Authorization: `Bearer AAAAAAAAAAAAAAAAAAAAAM57SwEAAAAAsgzNZrKohZdDNKufEhpjlIAINBE%3DW3gvQihA7oJFlA3lr18C9YYOAf7SgQvQVxZszG6A3SAyAaDMo3`,
+    Authorization: `Bearer ${process.env.BEARER_TOKEN}`,
   },
 };
 const getTweets = async () => {
