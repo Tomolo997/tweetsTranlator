@@ -1,7 +1,8 @@
 // twitter
 const axios = require("axios");
 require("dotenv").config();
-
+var Twitter = require("twitter");
+const Twitterr = require("twitter-lite");
 const LanguageTranslatorV3 = require("ibm-watson/language-translator/v3");
 const { IamAuthenticator } = require("ibm-watson/auth");
 const { fstat } = require("fs");
@@ -14,11 +15,6 @@ const languageTranslator = new LanguageTranslatorV3({
   serviceUrl:
     "https://api.au-syd.language-translator.watson.cloud.ibm.com/instances/95d75ec8-71fe-4eee-99b5-e77c401d5be3",
 });
-
-const translateParams = {
-  text: "Hello, how are you today?",
-  modelId: "en-es",
-};
 
 const getTranslation = async (text, model) => {
   const result = await languageTranslator.translate({
@@ -58,4 +54,73 @@ const getTweets = async () => {
   fs.writeFileSync("./tweets.json", JSON.stringify(ObjectOFTransaltions));
 };
 
-getTweets();
+const client = new Twitter({
+  consumer_key: process.env.API_TWITTER,
+  consumer_secret: process.env.API_SECRETKEY_TWITTER,
+  access_token_key: process.env.ACCESS_TOKEN,
+  access_token_secret: process.env.ACCESS_TOKEN_SECRET,
+});
+
+var tweet = {
+  status: "time to say goodbye",
+};
+
+const functionTORUN = async () => {
+  try {
+    await client.post("statuses/update", tweet);
+  } catch (error) {
+    console.log(error);
+  }
+};
+functionTORUN();
+
+/*
+ *	Code snippet for posting tweets to your own twitter account from node.js.
+ *	You must first create an app through twitter, grab the apps key/secret,
+ *	and generate your access token/secret (should be same page that you get the
+ *	app key/secret).
+ * 	Uses oauth package found below:
+ *		https://github.com/ciaranj/node-oauth
+ *		npm install oauth
+ *	For additional usage beyond status updates, refer to twitter api
+ *		https://dev.twitter.com/docs/api/1.1
+ */
+
+// var OAuth = require("oauth");
+
+// var twitter_application_consumer_key = process.env.API_TWITTER; // API Key
+// var twitter_application_secret = process.env.API_SECRETKEY_TWITTER; // API Secret
+// var twitter_user_access_token = process.env.ACCESS_TOKEN; // Access Token
+// var twitter_user_secret = process.env.ACCESS_TOKEN_SECRET; // Access Token Secret
+
+// var oauth = new OAuth.OAuth(
+//   "https://api.twitter.com/oauth/request_token",
+//   "https://api.twitter.com/oauth/access_token",
+//   twitter_application_consumer_key,
+//   twitter_application_secret,
+//   "1.0A",
+//   null,
+//   "HMAC-SHA1"
+// );
+
+// var status = ""; // This is the tweet (ie status)
+
+// var postBody = {
+//   status: status,
+// };
+
+// // console.log('Ready to Tweet article:\n\t', postBody.status);
+// oauth.post(
+//   "https://api.twitter.com/1.1/statuses/update.json",
+//   twitter_user_access_token, // oauth_token (user access token)
+//   twitter_user_secret, // oauth_secret (user secret)
+//   "time to yea", // post body
+//   "application/json", // post content type ?
+//   function (err, data, res) {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       // console.log(data);
+//     }
+//   }
+// );
