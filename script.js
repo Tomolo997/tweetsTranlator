@@ -25,6 +25,20 @@ const getTranslation = async (text, model) => {
 };
 
 const ObjectOFTransaltions = [];
+const client = new Twitter({
+  consumer_key: process.env.API_TWITTER,
+  consumer_secret: process.env.API_SECRETKEY_TWITTER,
+  access_token_key: process.env.ACCESS_TOKEN,
+  access_token_secret: process.env.ACCESS_TOKEN_SECRET,
+});
+
+const functionTORUN = async (text) => {
+  try {
+    await client.post("statuses/update", { status: text });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const config = {
   headers: {
@@ -42,7 +56,6 @@ const getTweets = async () => {
     const element = tweets[i];
     if (tweetsData.data.meta.newest_id === tweets[0].id) {
       console.log("NO NEW TWEETS");
-      break;
     }
     ObjectOFTransaltions.push({
       text: element.text,
@@ -50,30 +63,12 @@ const getTweets = async () => {
       translationToEnglish: await getTranslation(element.text, "ar-en"),
     });
   }
-
-  fs.writeFileSync("./tweets.json", JSON.stringify(ObjectOFTransaltions));
-};
-
-const client = new Twitter({
-  consumer_key: process.env.API_TWITTER,
-  consumer_secret: process.env.API_SECRETKEY_TWITTER,
-  access_token_key: process.env.ACCESS_TOKEN,
-  access_token_secret: process.env.ACCESS_TOKEN_SECRET,
-});
-
-var tweet = {
-  status: "time to say goodbye",
-};
-
-const functionTORUN = async () => {
-  try {
-    await client.post("statuses/update", tweet);
-  } catch (error) {
-    console.log(error);
+  for (let i = 0; i < ObjectOFTransaltions.length; i++) {
+    const element = ObjectOFTransaltions[i];
+    functionTORUN(element.translationToEnglish);
   }
 };
-functionTORUN();
-
+getTweets();
 /*
  *	Code snippet for posting tweets to your own twitter account from node.js.
  *	You must first create an app through twitter, grab the apps key/secret,
