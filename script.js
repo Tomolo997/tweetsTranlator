@@ -32,13 +32,13 @@ const client = new Twitter({
   access_token_secret: process.env.ACCESS_TOKEN_SECRET,
 });
 
-const functionTORUN = async (text) => {
-  try {
-    await client.post("statuses/update", { status: text });
-  } catch (error) {
-    console.log(error);
-  }
-};
+// const functionTORUN = async (text) => {
+//   try {
+//     await client.post("statuses/update", { status: text });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 const config = {
   headers: {
@@ -59,6 +59,8 @@ const getTweets = async () => {
     stringOfTranslations += translation + " ";
     if (tweetsData.data.meta.newest_id === tweets[0].id) {
       console.log("NO NEW TWEETS");
+      //return the whole function
+      return "no new tweets";
     }
     ObjectOFTransaltions.push({
       text: element.text,
@@ -67,15 +69,7 @@ const getTweets = async () => {
     });
   }
 
-  let arrayOfTweets = [];
-  for (let i = 0; i < stringOfTranslations.length; i++) {
-    const el = stringOfTranslations[i];
-    if (i % 280 == 0) {
-      arrayOfTweets.push(stringOfTranslations.slice(i - 280, i));
-    }
-  }
   const ThreadOfTweets = stringOfTranslations.match(/.{1,280}/g);
-  // arr.splice(index, 0, item); will insert item into arr at the specified index (deleting 0 items first, that is, it's just an insert).
 
   async function tweetThread(thread) {
     let lastTweetID = "";
